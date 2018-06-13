@@ -1,6 +1,6 @@
 # Add feeds
     
-    echo 'src-git rtty https://github.com/zhaojh329/rtty.git;openwrt' >> feeds.conf.default
+    echo 'src-git rtty https://github.com/zhaojh329/rtty.git;openwrt-15.05' >> feeds.conf.default
 
 # Update feeds
 
@@ -13,7 +13,7 @@
 
 	Utilities  --->
     	Terminal  --->
-        	<*> rtty-mbedtls............................ A reverse proxy WebTTY (mbedtls)
+        	<*> rtty-polarssl............................ A reverse proxy WebTTY (polarssl)
         	< > rtty-nossl............................... A reverse proxy WebTTY (NO SSL)
         	< > rtty-openssl............................ A reverse proxy WebTTY (openssl)
-        	< > rtty-wolfssl............................ A reverse proxy WebTTY (wolfssl)
+        	< > rtty-cyassl............................ A reverse proxy WebTTY (cyassl)
