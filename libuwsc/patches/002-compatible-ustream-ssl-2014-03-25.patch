@@ -1,0 +1,12 @@
+Index: libuwsc-2.0.2/src/uwsc.c
+===================================================================
+--- libuwsc-2.0.2.orig/src/uwsc.c
++++ libuwsc-2.0.2/src/uwsc.c
+@@ -530,7 +530,6 @@ struct uwsc_client *uwsc_new_ssl(const c
+         cl->ussl.notify_error = uwsc_ssl_notify_error;
+         cl->ussl.notify_verify_error = uwsc_ssl_notify_verify_error;
+         cl->ussl.notify_connected = uwsc_ssl_notify_connected;
+-        cl->ussl.server_name = host;
+         cl->ssl_ops->init(&cl->ussl, &cl->sfd.stream, cl->ssl_ctx, false);
+         cl->ssl_ops->set_peer_cn(&cl->ussl, host);
+ #else
