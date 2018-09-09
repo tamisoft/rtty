@@ -1,6 +1,6 @@
 # Add feeds
     
-    echo 'src-git rtty https://github.com/zhaojh329/rtty.git;openwrt-14.04' >> feeds.conf.default
+    echo 'src-git rtty https://github.com/zhaojh329/rtty.git;openwrt-14-15' >> feeds.conf.default
 
 # Update feeds
 

@@ -8,14 +8,15 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=rtty
-PKG_VERSION:=5.1.0
-PKG_RELEASE:=3
+PKG_VERSION:=6.0.0
+PKG_RELEASE:=2
 
-PKG_SOURCE_PROTO:=git
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
 PKG_SOURCE_VERSION:=v$(PKG_VERSION)
-PKG_SOURCE_URL=https://github.com/zhaojh329/rtty.git
+PKG_SOURCE_URL=https://codeload.github.com/zhaojh329/rtty/tar.gz/v$(PKG_VERSION)?
+PKG_HASH:=e99af81525bf2597cf71b79955a81e694633eec2785964b2338b5fbd32ba0139
+CMAKE_INSTALL:=1
 
 PKG_BUILD_DIR=$(BUILD_DIR)/$(PKG_NAME)-$(BUILD_VARIANT)/$(PKG_SOURCE_SUBDIR)
 
@@ -39,12 +40,20 @@ define Package/rtty/default/description
 A reverse proxy WebTTY. This is the client part running on devices to be managed.
 endef
 
+define Package/rtty-cyassl
+  $(Package/rtty/default)
+  TITLE += (cyassl)
+  DEPENDS += +libuwsc-cyassl
+  VARIANT:=cyassl
+  CONFLICTS:=rtty-nossl rtty-openssl rtty-polarssl
+endef
+
 define Package/rtty-nossl
   $(Package/rtty/default)
   TITLE += (NO SSL)
   DEPENDS += +libuwsc-nossl
   VARIANT:=nossl
-  CONFLICTS:=rtty-openssl rtty-cyassl rtty-polarssl
+  CONFLICTS:=rtty-openssl rtty-polarssl
 endef
 
 define Package/rtty-openssl
@@ -52,14 +61,6 @@ define Package/rtty-openssl
   TITLE += (openssl)
   DEPENDS += +libuwsc-openssl
   VARIANT:=openssl
-  CONFLICTS:=rtty-cyassl rtty-polarssl
-endef
-
-define Package/rtty-cyassl
-  $(Package/rtty/default)
-  TITLE += (cyassl)
-  DEPENDS += +libuwsc-cyassl
-  VARIANT:=cyassl
   CONFLICTS:=rtty-polarssl
 endef
 
