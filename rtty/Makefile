@@ -32,12 +32,13 @@ define Package/rtty/default
   SECTION:=utils
   CATEGORY:=Utilities
   SUBMENU:=Terminal
-  TITLE:=A reverse proxy WebTTY
+  TITLE:=Access your terminals from anywhere via the web
   DEPENDS:=+libprotobuf-c +@BUSYBOX_CUSTOM +@BUSYBOX_CONFIG_LOGIN
 endef
 
 define Package/rtty/default/description
-A reverse proxy WebTTY. This is the client part running on devices to be managed.
+Access your terminals from anywhere via the web. This is the client part running
+on devices to be managed.
 endef
 
 define Package/rtty-cyassl
