@@ -11,9 +11,9 @@
 
 # Select rtty in menuconfig and compile new image.
 
-	Utilities  --->
-    	Terminal  --->
-        	<*> rtty-polarssl............................ A reverse proxy WebTTY (polarssl)
-        	< > rtty-nossl............................... A reverse proxy WebTTY (NO SSL)
-        	< > rtty-openssl............................ A reverse proxy WebTTY (openssl)
-        	< > rtty-cyassl............................ A reverse proxy WebTTY (cyassl)
+    Utilities  --->
+        Terminal  --->
+            <*> rtty-polarssl.......................... Access your terminals from anywhere via the web (polarssl)
+            < > rtty-nossl............................. Access your terminals from anywhere via the web (NO SSL)
+            < > rtty-openssl........................... Access your terminals from anywhere via the web (openssl)
+            < > rtty-cyassl............................ Access your terminals from anywhere via the web (cyassl)
