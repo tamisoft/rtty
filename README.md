@@ -18,9 +18,7 @@
 [![Build Status][9]][10]
 
 [Xterm.js]: https://github.com/xtermjs/xterm.js
-[lrzsz]: https://ohse.de/uwe/software/lrzsz.html
 [libev]: http://software.schmorp.de/pkg/libev.html
-[libuwsc]: https://github.com/zhaojh329/libuwsc
 [openssl]: https://github.com/openssl/openssl
 [mbedtls(polarssl)]: https://github.com/ARMmbed/mbedtls
 [CyaSSl(wolfssl)]: https://github.com/wolfSSL/wolfssl
@@ -49,12 +47,11 @@ the world.
 * SSL support: openssl, mbedtls, CyaSSl(wolfssl)
 * Support device authorization
 * Support Execute a command remote
-* The client is very small, suitable for embedded Linux: rtty(20.1K) + libev(48.5K) + libuwsc(24.4K) = 93K. If you want
-  to support ssl, +libwolfssl(595.9K) = 688.9K
+* The client is very small, suitable for embedded Linux: rtty(20.1K) + libev(48.5K) = 68K. If you want
+  to support ssl, +libwolfssl(595.9K) = 664K
 
 # Dependencies of the Client side
 * [libev] - A full-featured and high-performance event loop
-* [libuwsc] - A Lightweight and fully asynchronous WebSocket client library based on libev
 * [mbedtls(polarssl)], [CyaSSl(wolfssl)] or [openssl] - If you want to support SSL
 
 # [Deploying the server side](https://github.com/zhaojh329/rttys)

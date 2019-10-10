@@ -22,17 +22,13 @@
  * SOFTWARE.
  */
 
-#ifndef _UTILS_H
-#define _UTILS_H
+#ifndef _HEART_BEAT_H
+#define _HEART_BEAT_H
 
 #include <stdbool.h>
 #include <sys/types.h>
-#include <sys/socket.h>
 
-int parse_address(const char *host, int port, int socktype, struct sockaddr *addr, int *addr_len);
-
-int find_login(char *buf, int len);
-
-bool valid_id(const char *id);
+int start_heart_beat(const char *host, int port);
 
 #endif
+

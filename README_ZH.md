@@ -18,9 +18,7 @@
 [![Build Status][9]][10]
 
 [Xterm.js]: https://github.com/xtermjs/xterm.js
-[lrzsz]: https://ohse.de/uwe/software/lrzsz.html
 [libev]: http://software.schmorp.de/pkg/libev.html
-[libuwsc]: https://github.com/zhaojh329/libuwsc
 [openssl]: https://github.com/openssl/openssl
 [mbedtls(polarssl)]: https://github.com/ARMmbed/mbedtls
 [CyaSSl(wolfssl)]: https://github.com/wolfSSL/wolfssl
@@ -47,11 +45,10 @@ rtty非常适合远程维护你的或者你公司的部署在全球各地的成�
 * 支持SSL: openssl, mbedtls, CyaSSl(wolfssl)
 * 支持设备认证
 * 支持远程执行命令
-* 客户端非常小，适合嵌入式Linux: rtty(20.1K) + libev(48.5K) + libuwsc(24.4K) = 93K. 如果你希望支持SSL，+libwolfssl(595.9K) = 688.9K
+* 客户端非常小，适合嵌入式Linux: rtty(20.1K) + libev(48.5K) = 68K. 如果你希望支持SSL，+libwolfssl(595.9K) = 664K
 
 # 客户端依赖
 * [libev] - 高性能的事件循环库
-* [libuwsc] - 一个轻量的针对嵌入式Linux的基于libev的WebSocket客户端C库。
 * [mbedtls(polarssl)]、[CyaSSl(wolfssl)]或者[openssl] - 如果你需要支持SSL
 
 # [部署服务端](https://github.com/zhaojh329/rttys/blob/master/README_ZH.md)

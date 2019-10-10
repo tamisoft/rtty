@@ -31,32 +31,41 @@
 #include <ctype.h>
 #include <uwsc/log.h>
 
-/* blen is the size of buf; slen is the length of src.  The input-string need
-** not be, and the output string will not be, null-terminated.  Returns the
-** length of the encoded string, or -1 on error (buffer overflow) */
-int urlencode(char *buf, int blen, const char *src, int slen)
+static const char *port2str(int port)
 {
-    int i;
-    int len = 0;
-    static const char hex[] = "0123456789abcdef";
+    static char buffer[sizeof("65535\0")];
 
-    for (i = 0; (i < slen) && (len < blen); i++) {
-        if (isalnum(src[i]) || (src[i] == '-') || (src[i] == '_') ||
-            (src[i] == '.') || (src[i] == '~')) {
-            buf[len++] = src[i];
-        } else if (src[i] == ' ') {
-            buf[len++] = '+';
-        } else if ((len + 3) <= blen) {
-            buf[len++] = '%';
-            buf[len++] = hex[(src[i] >> 4) & 15];
-            buf[len++] = hex[ src[i]       & 15];
-        } else {
-            len = -1;
+    if (port < 0 || port > 65535)
+        return NULL;
+
+    snprintf(buffer, sizeof(buffer), "%u", port);
+
+    return buffer;
+}
+
+int parse_address(const char *host, int port, int socktype, struct sockaddr *addr, int *addr_len)
+{
+    struct addrinfo *result, *rp;
+    struct addrinfo hints = {
+        .ai_family = AF_INET,
+        .ai_socktype = socktype,
+        .ai_flags = AI_ADDRCONFIG
+    };
+
+    if (getaddrinfo(host, port2str(port), &hints, &result))
+        return -1;
+
+    for (rp = result; rp != NULL; rp = rp->ai_next) {
+        if (rp->ai_family == AF_INET) {
+            memcpy(addr, rp->ai_addr, sizeof(struct sockaddr));
+            *addr_len = rp->ai_addrlen;
             break;
         }
     }
 
-    return (i == slen) ? len : -1;
+free_addrinfo:
+    freeaddrinfo(result);
+    return 0;
 }
 
 int find_login(char *buf, int len)

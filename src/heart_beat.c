@@ -22,17 +22,26 @@
  * SOFTWARE.
  */
 
-#ifndef _UTILS_H
-#define _UTILS_H
+#include <ev.h>
 
-#include <stdbool.h>
-#include <sys/types.h>
-#include <sys/socket.h>
+#include "heart_beat.h"
+#include "utils.h"
 
-int parse_address(const char *host, int port, int socktype, struct sockaddr *addr, int *addr_len);
+static struct ev_timer timer;
 
-int find_login(char *buf, int len);
+static void send_heart_beat(struct ev_loop *loop, struct ev_timer *w, int revents)
+{
+}
 
-bool valid_id(const char *id);
+int start_heart_beat(struct ev_loop *loop, const char *host, int port)
+{
+    struct sockaddr addr;
+    int addr_len;
 
-#endif
+    if (parse_address(host, port, SOCK_DGRAM, &addr, &addr_len))
+        return -1;
+
+    ev_timer_init(&timer, uwsc_timer_cb, 0.0, 1.0);
+    ev_timer_start(loop, &timer);
+}
+

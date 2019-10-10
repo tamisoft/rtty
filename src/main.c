@@ -40,6 +40,7 @@
 #include "config.h"
 #include "utils.h"
 #include "command.h"
+#include "heart_beat.h"
 
 #define RTTY_RECONNECT_INTERVAL  5
 #define RTTY_MAX_SESSIONS        5
@@ -62,9 +63,7 @@ struct tty_session {
 static char login[128];       /* /bin/login */
 static char server_url[512];
 static char extra_header[128];  /* authorization token */
-static bool auto_reconnect;
 static int keepalive = 5;       /* second */
-static struct ev_timer reconnect_timer;
 static struct tty_session *sessions[RTTY_MAX_SESSIONS + 1];
 
 static void del_tty_session(struct tty_session *tty)
@@ -317,22 +316,6 @@ static void uwsc_onclose(struct uwsc_client *cl, int code, const char *reason)
         ev_break(loop, EVBREAK_ALL);
 }
 
-static void do_connect(struct ev_loop *loop, struct ev_timer *w, int revents)
-{
-    struct uwsc_client *cl = uwsc_new(loop, server_url, keepalive, extra_header);
-    if (cl) {
-        cl->onopen = uwsc_onopen;
-        cl->onmessage = uwsc_onmessage;
-        cl->onerror = uwsc_onerror;
-        cl->onclose = uwsc_onclose;
-        ev_timer_stop(cl->loop, &reconnect_timer);
-        return;
-    }
-
-    if (!auto_reconnect)
-        ev_break(loop, EVBREAK_ALL);
-}
-
 static void signal_cb(struct ev_loop *loop, ev_signal *w, int revents)
 {
     if (w->signum == SIGINT) {
@@ -348,11 +331,10 @@ static void usage(const char *prog)
         "                          number, underline and short line)\n"
         "      -h host      # Server's host or ipaddr\n"
         "      -p port      # Server port(Default is 5912)\n"
-        "      -a           # Auto reconnect to the server\n"
+        "      -P port      # Heart beat port(Default is 5913)\n"
         "      -v           # verbose\n"
         "      -d           # Adding a description to the device(Maximum 126 bytes)\n"
         "      -s           # SSL on\n"
-        "      -k keepalive # keep alive in seconds for this client. Defaults to 5\n"
         "      -V           # Show version\n"
         "      -D           # Run in the background\n"
         "      -R           # Receive file\n"
@@ -370,12 +352,13 @@ int main(int argc, char **argv)
     char devid[64] = "";
     const char *host = NULL;
     int port = 5912;
+    int heart_beat_port = 5913;
     char *description = NULL;
     bool background = false;
     bool verbose = false;
     bool ssl = false;
 
-    while ((opt = getopt(argc, argv, "h:p:I:avd:sk:VDRS:t:")) != -1) {
+    while ((opt = getopt(argc, argv, "h:p:P:I:vd:sVDRS:t:")) != -1) {
         switch (opt) {
         case 'h':
             host = optarg;
@@ -383,11 +366,11 @@ int main(int argc, char **argv)
         case 'p':
             port = atoi(optarg);
             break;
+        case 'P':
+            heart_beat_port = atoi(optarg);
+            break;
         case 'I':
             strncpy(devid, optarg, sizeof(devid) - 1);
-            break;
-        case 'a':
-            auto_reconnect = true;
             break;
         case 'v':
             verbose = true;
@@ -406,9 +389,6 @@ int main(int argc, char **argv)
             break;
         case 's':
             ssl = true;
-            break;
-        case 'k':
-            keepalive = atoi(optarg);
             break;
         case 'V':
             uwsc_log_info("rtty version %s\n", RTTY_VERSION_STRING);
@@ -465,13 +445,10 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    snprintf(server_url, sizeof(server_url),
-        "ws%s://%s:%d/ws?device=1&devid=%s&description=%s&keepalive=%d",
-        ssl ? "s" : "", host, port, devid, description ? description : "", keepalive);
-    free(description);
+    if (start_heart_beat(host, heart_beat_port) < 0)
+        return -1;
 
-    ev_timer_init(&reconnect_timer, do_connect, 0.0, RTTY_RECONNECT_INTERVAL);
-	ev_timer_start(loop, &reconnect_timer);
+    free(description);
 
     ev_signal_init(&signal_watcher, signal_cb, SIGINT);
     ev_signal_start(loop, &signal_watcher);

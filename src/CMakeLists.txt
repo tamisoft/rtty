@@ -7,12 +7,11 @@ set(RTTY_VERSION_PATCH 1)
 
 # Check the third party Libraries
 find_package(Libev REQUIRED)
-find_package(Libuwsc 3.2 REQUIRED)
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR} ${LIBUWSC_INCLUDE_DIR} ${LIBEV_INCLUDE_DIR})
-set(EXTRA_LIBS ${LIBUWSC_LIBRARY} ${LIBEV_LIBRARY} util crypt m)
+include_directories(${CMAKE_CURRENT_BINARY_DIR} ${LIBEV_INCLUDE_DIR})
+set(EXTRA_LIBS ${LIBEV_LIBRARY} util crypt m)
 
-add_executable(rtty main.c utils.c json.c command.c file.c)
+add_executable(rtty main.c utils.c json.c command.c file.c heart_beat.c)
 target_link_libraries(rtty ${EXTRA_LIBS})
 
 # configure a header file to pass some of the CMake settings to the source code
