@@ -1,0 +1,5 @@
+#
+#  -v : verbose
+#  -f [username] :  Skip a second login authentication. See man login(1) about the details
+#
+OPTS=-v

@@ -1,0 +1,17 @@
+[Unit]
+Description=RTTY, remote terminal access client
+After=network.target
+
+[Service]
+SELinuxContext=unconfined_u:unconfined_r:unconfined_t:s0
+EnvironmentFile=/etc/rtty/rtty.conf
+EnvironmentFile=-/etc/sysconfig/rtty
+ExecStart=/bin/sh -c '[ -z ${RTTYS_NO_SSL} ] && OPTS="-s ${OPTS}"; \
+[ -z ${RTTYS_NO_AUTO_RECONNECT} ] && OPTS="-a $${OPTS}"; \
+/usr/bin/rtty  -I "${HOST_ID}" -h "${RTTYS_SERVER}" -k ${KEEPALIVE} -p ${RTTYS_PORT} $${OPTS} -d "${HOST_DESC}" -t ${RTTYS_TOKEN}'
+Type=simple
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
